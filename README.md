@@ -32,10 +32,10 @@ Most secrets scanners stop at pattern matching on the current working tree. `pii
 
 | Tool | Layer | Where it differs from pii-check |
 |------|-------|----------------------------------|
-| [sensitive-canary](https://github.com/anthropics/skills) | Context-window / API egress | Blocks secrets from reaching the Anthropic API via hooks — protects the *prompt*, not the repo. Complementary, not competing. |
-| vibe-guardian | Pre-commit hook | Broader vuln focus (injection, XSS, secrets), shallower on PII — regex/checklist only, no history awareness. |
-| scanning-for-secrets (jeremylongshore) | Pre-commit / audit | Secrets only via pattern matching and entropy. No PII, no history, no agentic-artifact checks. |
-| Anthropic's security-review skill | Diff review | General security review scoped to the current diff. Not publish-readiness, not history. |
+| [sensitive-canary](https://github.com/coo-quack/sensitive-canary) | Context-window / API egress | Blocks secrets from reaching the Anthropic API via hooks — protects the *prompt*, not the repo. Complementary, not competing. |
+| [vibe-guardian](https://github.com/Camof1ow/vibe-guardian) | Pre-commit hook | Broader vuln focus (injection, XSS, secrets), shallower on PII — regex/checklist only, no history awareness. |
+| [scanning-for-secrets](https://github.com/jeremylongshore/claude-code-plugins-plus-skills) (jeremylongshore) | Pre-commit / audit | Secrets only via pattern matching and entropy. No PII, no history, no agentic-artifact checks. |
+| [Anthropic's security-review skill](https://github.com/anthropics/skills) | Diff review | General security review scoped to the current diff. Not publish-readiness, not history. |
 
 The gap: if you are about to `git push --mirror` a repo that started as a private workspace and has had an AI agent working in it, none of the above tools give you confidence it is safe to publish. `pii-check` does.
 
