@@ -29,9 +29,21 @@ Also trigger when: user is about to `git push` a previously private repo, or ask
 Before running any step that rewrites history, check whether `git-filter-repo` is available:
 
 ```bash
-python3 /tmp/git-filter-repo --version 2>/dev/null || \
-  curl -sL https://raw.githubusercontent.com/newren/git-filter-repo/main/git-filter-repo \
-    -o /tmp/git-filter-repo && chmod +x /tmp/git-filter-repo
+# Pinned to v2.47.0 — update VERSION and EXPECTED_SHA together when upgrading
+VERSION="v2.47.0"
+EXPECTED_SHA="67447413e273fc76809289111748870b6f6072f08b17efe94863a92d810b7d94"
+DEST="/tmp/git-filter-repo"
+
+if ! python3 "$DEST" --version 2>/dev/null; then
+  curl -sL "https://raw.githubusercontent.com/newren/git-filter-repo/${VERSION}/git-filter-repo" -o "$DEST"
+  ACTUAL_SHA=$(sha256sum "$DEST" | awk '{print $1}')
+  if [ "$ACTUAL_SHA" != "$EXPECTED_SHA" ]; then
+    echo "ABORT: git-filter-repo checksum mismatch (got $ACTUAL_SHA)" >&2
+    rm -f "$DEST"
+    exit 1
+  fi
+  chmod +x "$DEST"
+fi
 ```
 
 Use `python3 /tmp/git-filter-repo` for all subsequent calls — do NOT try `apt`, `pip`, or `pip3` first; they require sudo or a venv and fail silently in WSL. The curl approach is always reliable.

@@ -16,6 +16,29 @@ If you want a universal skills manager that works across AI coding tools beyond 
 |-------|-------------|
 | [pii-check](./pii-check/SKILL.md) | Audit a repo for PII leakage, secrets, and sensitive data before commits or publishing. Runs gitleaks if available, scans git history, checks working tree for known and novel patterns, and optionally wires up a pre-commit hook. |
 
+---
+
+### pii-check — what makes it different
+
+Most secrets scanners stop at pattern matching on the current working tree. `pii-check` adds three layers that nothing else covers together:
+
+**1. Git history awareness.** Deleted files are not gone — they live in every clone's history until history is rewritten. This skill scans `git log --all` for files that were ever committed and then deleted, flags them as CRITICAL, and walks you through a `git filter-repo` rewrite (with a working-tree-wipe warning that most tutorials omit).
+
+**2. Inference-based scanning.** Beyond grep patterns, it reasons about combination risk (first name + postcode + employer = identified person), flags sample data that looks real rather than synthetic, and catches internal hostnames and account identifiers that have no credential pattern but still expose infrastructure.
+
+**3. Agentic-workflow artifacts.** It explicitly checks for `handoff.md`, session notes, run logs, and `.claude/` directories — files that are created by AI coding workflows and contain session context, account identifiers, or run details that gitleaks will never flag because they contain no credential *pattern*. These barely existed as a threat surface two years ago, which is why no traditional tool covers them.
+
+### Closest neighbours
+
+| Tool | Layer | Where it differs from pii-check |
+|------|-------|----------------------------------|
+| [sensitive-canary](https://github.com/anthropics/skills) | Context-window / API egress | Blocks secrets from reaching the Anthropic API via hooks — protects the *prompt*, not the repo. Complementary, not competing. |
+| vibe-guardian | Pre-commit hook | Broader vuln focus (injection, XSS, secrets), shallower on PII — regex/checklist only, no history awareness. |
+| scanning-for-secrets (jeremylongshore) | Pre-commit / audit | Secrets only via pattern matching and entropy. No PII, no history, no agentic-artifact checks. |
+| Anthropic's security-review skill | Diff review | General security review scoped to the current diff. Not publish-readiness, not history. |
+
+The gap: if you are about to `git push --mirror` a repo that started as a private workspace and has had an AI agent working in it, none of the above tools give you confidence it is safe to publish. `pii-check` does.
+
 ## Installation
 
 Copy the skill folder into your Claude Code skills directory:
