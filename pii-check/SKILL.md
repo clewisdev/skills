@@ -7,6 +7,18 @@ description: Audit a repo for PII leakage, secrets, and sensitive data before co
 
 Audit the current repo for personally identifiable information, credentials, and sensitive data. Covers static patterns, novel inference, git history, and optionally installs a prevention hook.
 
+## Installation
+
+```bash
+# Clone the skills repo
+git clone https://github.com/clewisdev/skills.git
+
+# Copy this skill into your Claude Code skills directory
+cp -r skills/pii-check ~/.claude/skills/pii-check
+```
+
+Then use `/pii-check` in any Claude Code session, or trigger it naturally (see Activation below).
+
 ## Activation
 
 User says: "pii check", "scan for pii", "check for secrets", "pre-publish audit", /pii-check.

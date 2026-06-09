@@ -8,6 +8,8 @@ Skills are markdown-based instruction files that extend Claude Code's behavior f
 
 Inspired by [anthropics/skills](https://github.com/anthropics/skills) and [mattpocock/skills](https://github.com/mattpocock/skills).
 
+If you want a universal skills manager that works across AI coding tools beyond just Claude Code, see [airskills](https://github.com/chrismdp/airskills) by Chris Parsons and [asm](https://github.com/luongnv89/asm) by Luong Nguyen.
+
 ## Available skills
 
 | Skill | Description |
